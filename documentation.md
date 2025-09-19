@@ -273,7 +273,7 @@ This approach helps catch malicious packages that are quickly identified and rem
 
 ### 3\. **Private Registry Solutions**
 
-According to feedback from security engineers using tools like:
+According to feedback from DevSecOps engineers using tools like:
 
 * **Artifactory** with private repositories and package approval workflows
     
