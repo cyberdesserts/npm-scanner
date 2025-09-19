@@ -34,7 +34,9 @@ Traditional tools like `npm audit` only scratch the surface. This scanner provid
 - **deps.dev API integration** for comprehensive vulnerability data
 - **87% more coverage** - reveals hidden transitive dependencies
 - **Release date tracking** to identify abandoned packages
-- **No authentication required** - completely free to use
+- **Open source (MIT license)** - free to use, modify, and distribute
+
+
 
 ## 📊 What You Get
 
