@@ -1,14 +1,16 @@
 # Building a Custom Dependency Scanner with the deps.dev API: A Proactive Approach to npm Security
 
-The npm ecosystem is both a blessing and a curse for JavaScript developers. With over 2 million packages, it's incredibly powerful—but it's also a prime target for supply chain attacks. Recent incidents like the `ua-parser-js` compromise, malicious typosquatting packages, and countless prototype pollution vulnerabilities have made one thing clear: **trusting npm packages blindly is no longer an option**.
+The npm ecosystem is both a blessing and a curse for JavaScript developers. With over 2 million packages, it's incredibly powerful—but it's also a prime target for supply chain attacks. Incidents like the [`ua-parser-js`](https://www.npmjs.com/package/ua-parser-js), more recently [`chalk` packages](https://www.aikido.dev/blog/npm-debug-and-chalk-packages-compromised) compromise, malicious typosquatting packages, and countless prototype pollution vulnerabilities have made one thing clear: **trusting npm packages blindly is no longer an option**.
 
 As JavaScript projects grow, keeping track of your dependencies becomes crucial not just for maintenance, but for security. While npm provides basic tools, the modern threat landscape demands more detailed insights into your dependency ecosystem. That's where Google's deps.dev API comes in handy.
 
-In this article, we'll build a custom dependency scanner that provides rich information about your npm packages, including release dates, vulnerability data, and comprehensive reporting—giving you the visibility needed to make informed security decisions.
+Thanks to some feedback from the community I decided to try and build a custom dependency scanner that provides rich information about npm packages in my projects, including release dates, vulnerability data, and comprehensive reporting—giving me some level of visibility. This is by no means fool proof, its heavily reliant on data pulled from [deps.dev](https://deps.dev) There are companies out there that would be malware scanning libraries and running further checks constantly so its worth looking into whats out there on offer. Never the less this is a fun project and makes an excellent first level of checking and help understand some of the issues.
+
+> **🚀 Want to try it right now?** Check out the [Quick Start Guide](https://github.com/cyberdesserts/npm-scanner/blob/main/README.md) to get the scanner running in under 2 minutes with the included test project! 
 
 ## The npm Security Challenge
 
-Recent supply chain attacks have made the npm ecosystem's vulnerabilities painfully clear. As one security engineer recently noted in the cybersecurity community: *"Reality is, devs can download any package they want and we're just reacting to supply chain attacks."* This reactive approach isn't sustainable.
+Recent supply chain attacks have made the npm ecosystem's vulnerabilities painfully clear. This reactive approach isn't sustainable.
 
 The problems are multifaceted:
 
@@ -37,31 +39,33 @@ The [deps.dev API](https://docs.deps.dev/api/) aggregates data from multiple sou
 - **Multiple package ecosystem support** (npm, PyPI, Maven, etc.)
 - **Broader coverage** that may catch vulnerabilities missed by npm's database
 
-## Setting Up Our Scanner
+## Setting Up my Scanner
 
-Let's create a simple but effective dependency scanner as an npm script in our project.
+I created a simple but effective dependency scanner as an npm script in this example project.
 
-### Step 1: Project Structure
+### Step 1: Get the Scanner
 
-First, we'll organize our scanner as a separate script:
+The main scanner is a single JavaScript file that parses your dependencies and queries the deps.dev API. You can grab it from the GitHub repo:
 
-```
-your-project/
-├── package.json
-├── scripts/
-│   └── dependency-scanner.js
-└── src/
+```bash
+# Clone the complete project with test setup
+git clone https://github.com/cyberdesserts/npm-scanner.git
+cd npm-scanner/weather-cli-test
+npm install
+
+# Or just download the scanner file to your project
+curl -o dependency-scanner.js https://raw.githubusercontent.com/cyberdesserts/npm-scanner/main/weather-cli-test/dependency-scanner.js
 ```
 
 ### Step 2: The Scanner Implementation
 
-Our scanner will:
+The scanner will:
 1. Parse `package.json` to extract dependencies
 2. Query the deps.dev API for each package
 3. Collect vulnerability and release date information
 4. Generate a comprehensive report
 
-The core functionality involves three main API endpoints:
+The core functionality involves three main API endpoints from devs.deps:
 
 ```javascript
 // Get version information and release dates
@@ -76,7 +80,7 @@ GET /v3/systems/npm/packages/{package}/versions
 
 ### Step 3: Running the Scanner
 
-Add this to your `package.json`:
+Add this to the `package.json`:
 
 ```json
 {
@@ -143,21 +147,21 @@ Results saved to dependency-scan.json
 
 ## What This Report Tells Us
 
-From this example scan, we can immediately identify several security concerns:
+From this example scan, I can immediately identify several security concerns:
 
 - **Immediate Action Required**: The high severity prototype pollution in lodash needs immediate attention—this is a classic vulnerability that's been exploited in the wild
 - **Age Red Flags**: Dependencies over 1000 days old may be abandoned or poorly maintained
 - **Attack Surface**: 2 out of 8 packages having vulnerabilities shows how quickly risk accumulates
 - **Maintenance Debt**: Old packages like jsonwebtoken from 2019 are prime targets for supply chain attacks
 
-This visibility allows you to make informed decisions about:
+This visibility give me some useful insights:
 - Which updates are security-critical vs. nice-to-have
 - Whether to find alternative packages for abandoned dependencies  
 - Risk assessment for compliance and security reviews
 
-## Automating Your Scans
+## Automating my Scans
 
-You can run this scanner periodically using:
+I can run this scanner periodically using:
 
 ### GitHub Actions
 ```yaml
@@ -182,7 +186,7 @@ jobs:
 
 ## Benefits Over Basic npm Tools
 
-Our deps.dev scanner provides several advantages:
+The deps.dev scanner provides several advantages:
 
 1. **Richer Data Sources**: Aggregates from multiple vulnerability databases
 2. **Historical Context**: Shows package age and release patterns  
@@ -192,10 +196,10 @@ Our deps.dev scanner provides several advantages:
 
 ## Beyond Basic Scanning: A Layered Security Approach
 
-While our deps.dev scanner provides excellent vulnerability visibility, the cybersecurity community has identified several complementary strategies for npm package security:
+While the deps.dev scanner provides excellent vulnerability visibility, the cybersecurity community has identified several complementary strategies for npm package security:
 
 ### 1. **Version Pinning and Lock File Management**
-As one practitioner noted: *"Lock versions in your package.json and only update on a cadence."*
+*"Lock versions in your package.json and only update on a cadence."*
 
 ```json
 {
@@ -222,7 +226,7 @@ Several organizations implement "cooldown periods" before adopting new packages:
 This approach helps catch malicious packages that are quickly identified and removed.
 
 ### 3. **Private Registry Solutions**  
-The "right answer" according to many security engineers is using tools like:
+According to feedback from security engineers using tools like:
 - **Artifactory** with private repositories and package approval workflows
 - **Nexus Firewall** for vetted internal repositories
 - **Proxy registries** with security scanning integration
@@ -265,11 +269,10 @@ Modern security approaches focus on rapid detection rather than perfect preventi
 
 ## Conclusion
 
-The cybersecurity community's consensus is clear: *"You can't protect preemptively. But you can be aware as quickly as possible."* Our deps.dev scanner addresses this need for awareness and rapid detection.
+The consensus is clear: *"You can't protect preemptively. But you can be aware as quickly as possible."* The deps.dev scanner addresses this need for awareness and rapid detection but its only a starting point.
 
-As one practitioner recently noted: *"Wish there was a tool that implemented something like this out there."* Well, now there is—and you can customize it for your organization's specific needs.
 
-**Key takeaways from the security community:**
+**Key takeaways :**
 
 1. **Accept the reactive reality**: Perfect prevention isn't possible, so focus on rapid detection and response
 2. **Layer your defenses**: No single tool solves npm security—combine scanning, private registries, time delays, and process controls
@@ -289,6 +292,6 @@ Building on this foundation, you can add:
 - **Historical trending** to track your security posture over time
 - **Multi-project dashboards** for portfolio-wide visibility
 
-The npm supply chain security challenge isn't solved by any single tool—it requires a comprehensive approach combining technology, process, and culture. Our deps.dev scanner gives you the visibility foundation to build that approach.
+The npm supply chain security challenge isn't solved by any single tool—it requires a comprehensive approach combining technology, process, and culture. hopefully my deps.dev scanner gives you the visibility foundation to build that approach.
 
-**Start monitoring today**: In a landscape where malicious packages can be published and spread within hours, waiting isn't an option. The question isn't whether you'll encounter a supply chain attack—it's whether you'll detect it quickly enough to minimize the impact.
+I'd love feedback on this implementation! Feel free to reach out, contribute improvements, or fork the project to adapt it for your specific needs.
