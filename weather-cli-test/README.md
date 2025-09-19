@@ -1,4 +1,4 @@
-# Weather CLI - Dependency Scanner Test Project
+# Weather CLI - Dependency Scanner Test Project cyberdesserts.com/npm-scanner
 
 A simple Node.js weather CLI application designed to test the custom dependency scanner built with the deps.dev API.
 

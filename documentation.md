@@ -159,7 +159,7 @@ This visibility give me some useful insights:
 - Whether to find alternative packages for abandoned dependencies  
 - Risk assessment for compliance and security reviews
 
-## Automating my Scans
+## Automating Scans
 
 I can run this scanner periodically using:
 
