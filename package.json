@@ -1,0 +1,36 @@
+{
+  "name": "npm-scanner",
+  "version": "1.0.0",
+  "description": "Comprehensive dependency scanner that analyzes both direct and transitive dependencies using the deps.dev API",
+  "type": "module",
+  "main": "weather-cli-test/dependency-scanner.js",
+  "scripts": {
+    "test": "cd weather-cli-test && npm install && npm run scan-deps",
+    "scan": "cd weather-cli-test && npm run scan-deps",
+    "demo": "cd weather-cli-test && npm start London"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyberdesserts/npm-scanner.git"
+  },
+  "keywords": [
+    "security",
+    "dependencies",
+    "npm",
+    "scanner",
+    "vulnerability",
+    "supply-chain",
+    "transitive-dependencies",
+    "deps-dev",
+    "security-audit"
+  ],
+  "author": "cyberdesserts",
+  "license": "MIT",
+  "homepage": "https://github.com/cyberdesserts/npm-scanner",
+  "bugs": {
+    "url": "https://github.com/cyberdesserts/npm-scanner/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
