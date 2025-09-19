@@ -4,6 +4,7 @@ A comprehensive dependency scanner that analyzes both **direct** and **transitiv
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D14.0.0-brightgreen)](https://nodejs.org/)
+- [Blog Article](https://cyberdesserts.com/npm-scanner)
 
 ## 🚀 Quick Start
 
@@ -243,3 +244,5 @@ MIT - see [LICENSE](LICENSE) file for details
 ---
 
 **Start securing your dependencies today**: The question isn't whether you'll encounter a supply chain attack—it's whether you'll detect it quickly enough to minimize impact.
+
+- [Blog Article https://cyberdesserts.com/npm-scanner](https://cyberdesserts.com/npm-scanner)

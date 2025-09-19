@@ -1,4 +1,4 @@
-# Weather CLI - Dependency Scanner Test Project cyberdesserts.com/npm-scanner
+# Weather CLI - Dependency Scanner Test Project [Blog Article](https://cyberdesserts.com/npm-scanner)
 
 A simple Node.js weather CLI application designed to test the custom dependency scanner built with the deps.dev API.
 
@@ -112,19 +112,38 @@ const versions = await scanner.getAllVersions('axios');
 console.log(versions.map(v => v.versionKey));
 ```
 
-#### 5. `scanDependencies(packageJsonPath)`
-Performs complete scan of all dependencies:
+#### 5. `scanDependencies(packageJsonPath, includeTransitive)`
+Performs complete scan of dependencies:
 ```javascript
-const results = await scanner.scanDependencies('./package.json');
+// Scan all dependencies including transitive (default)
+const results = await scanner.scanDependencies('./package.json', true);
+
+// Scan only direct dependencies
+const directOnly = await scanner.scanDependencies('./package.json', false);
 ```
 
-#### 6. `generateReport(results)`
+#### 6. `getAllInstalledPackages(packageLockPath)`
+Extracts all packages from package-lock.json:
+```javascript
+const allPackages = scanner.getAllInstalledPackages('./package-lock.json');
+console.log(Object.keys(allPackages).length); // 31 packages
+```
+
+#### 7. `getDependencyTypes(packageJsonPath)`
+Classifies dependencies as direct or transitive:
+```javascript
+const types = scanner.getDependencyTypes('./package.json');
+console.log(types['axios']); // 'direct'
+console.log(types['ansi-styles']); // 'transitive'
+```
+
+#### 8. `generateReport(results)`
 Outputs formatted console report:
 ```javascript
 scanner.generateReport(results);
 ```
 
-#### 7. `saveResults(results, filename)`
+#### 9. `saveResults(results, filename)`
 Saves detailed JSON report:
 ```javascript
 scanner.saveResults(results, 'my-scan-results.json');
@@ -167,24 +186,31 @@ console.log(`Packages older than 1 year: ${oldPackages.length}`);
 When running the scanner on this project, you should see:
 
 ```
-Scanning 4 dependencies...
-Scanning axios@^1.12.2...
-Scanning chalk@^4.1.2...
-Scanning commander@^14.0.1...
-Scanning dotenv@^17.2.2...
+Scanning 31 dependencies (including transitive)...
+Scanning ansi-styles@4.3.0...
+Scanning asynckit@0.4.0...
+Scanning axios@1.12.2...
+[... scanning all 31 packages ...]
 
 === DEPENDENCY SCAN REPORT ===
 
-Total packages scanned: 4
+Total packages scanned: 31
+  - Direct dependencies: 4
+  - Transitive dependencies: 27
 Packages with vulnerabilities: 0
 
 ✅ No vulnerabilities found!
 
+📊 VULNERABILITY BREAKDOWN:
+   Direct dependencies with vulnerabilities: 0/4
+   Transitive dependencies with vulnerabilities: 0/27
+
 📅 OLDEST DEPENDENCIES:
-   chalk@^4.1.2 - 2021-07-30T12:02:52Z
-   dotenv@^17.2.2 - 2025-09-02T21:09:37Z
-   commander@^14.0.1 - 2025-09-12T07:27:06Z
-   axios@^1.12.2 - 2025-09-14T12:59:27Z
+   🔗 delayed-stream@1.0.0 - 2015-04-30T22:10:29Z
+   🔗 asynckit@0.4.0 - 2016-06-14T18:29:05Z
+   🔗 color-name@1.1.4 - 2018-09-21T10:48:56Z
+   🎯 chalk@4.1.2 - 2021-07-30T12:02:52Z
+   🔗 combined-stream@1.0.8 - 2019-05-12T17:49:45Z
 
 Results saved to dependency-scan.json
 ```
@@ -192,18 +218,33 @@ Results saved to dependency-scan.json
 ## Scanner Output Files
 
 ### dependency-scan.json
-Contains detailed JSON results:
+Contains detailed JSON results with enhanced summary:
 ```json
 {
   "scanDate": "2025-09-19T...",
-  "totalPackages": 4,
-  "vulnerablePackages": 0,
+  "summary": {
+    "totalPackages": 31,
+    "directDependencies": 4,
+    "transitiveDependencies": 27,
+    "vulnerablePackages": 0,
+    "vulnerableDirect": 0,
+    "vulnerableTransitive": 0
+  },
   "results": [
     {
       "package": "axios",
-      "currentVersion": "^1.12.2",
+      "currentVersion": "1.12.2",
+      "dependencyType": "direct",
       "publishedAt": "2025-09-14T12:59:27Z",
-      "isDefault": false,
+      "isDefault": true,
+      "vulnerabilities": [],
+      "vulnerabilityCount": 0
+    },
+    {
+      "package": "ansi-styles",
+      "currentVersion": "4.3.0",
+      "dependencyType": "transitive",
+      "publishedAt": "2020-10-04T19:18:25Z",
       "vulnerabilities": [],
       "vulnerabilityCount": 0
     }
@@ -217,17 +258,18 @@ Contains detailed JSON results:
 To test vulnerability detection, temporarily add older vulnerable packages:
 ```bash
 npm install lodash@4.17.19  # Known prototype pollution vulnerability
-node ../scripts/dependency-scanner.js
+npm run scan-deps
+# Should detect vulnerabilities in both direct and transitive dependencies
 ```
 
 ### 2. Test with Missing package.json
 ```bash
-node ../scripts/dependency-scanner.js ./nonexistent.json
+node dependency-scanner.js ./nonexistent.json
 # Should show error: Failed to read package.json
 ```
 
 ### 3. Test API Rate Limiting
-For testing with many packages, the scanner includes a 100ms delay between requests to be respectful to the deps.dev API.
+The scanner processes 31 packages and includes a 100ms delay between requests. Full scans take ~3-4 minutes to complete.
 
 ### 4. Test Custom Package.json Path
 ```bash
@@ -328,3 +370,4 @@ The scanner handles various error conditions:
 - Review the DependencyScanner class methods in dependency-scanner.js
 - Test with this simple weather CLI project first before using on larger codebases
 - The scanner and weather CLI are now self-contained in this directory
+- [Blog Article https://cyberdesserts.com/npm-scanner](https://cyberdesserts.com/npm-scanner)
