@@ -6,7 +6,7 @@ As JavaScript projects grow, keeping track of your dependencies becomes crucial 
 
 Thanks to some feedback from the community I decided to try and build a custom dependency scanner that provides rich information about npm packages in my projects, including release dates, vulnerability data, and comprehensive reporting—giving me some level of visibility. This is by no means fool proof, its heavily reliant on data pulled from [deps.dev](https://deps.dev) There are companies out there that would be malware scanning libraries and running further checks constantly so its worth looking into whats out there on offer. Never the less this is a fun project and makes an excellent first level of checking and help understand some of the issues.
 
-> **🚀 Want to try it right now?** Check out the [Quick Start Guide](https://github.com/cyberdesserts/npm-scanner/blob/main/README.md) to get the scanner running in under 2 minutes with the included test project! 
+> **🚀 Want to try it right now?** Check out the [Quick Start Guide - README.MD](https://github.com/cyberdesserts/npm-scanner/blob/main/README.md) to get the scanner running in under 2 minutes with the included test project! 
 
 ## The npm Security Challenge
 
