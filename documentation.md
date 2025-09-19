@@ -376,4 +376,4 @@ The npm supply chain security challenge isn't solved by any single tool, it requ
 I'd love feedback on this implementation! Feel free to reach out, contribute improvements, or fork the project to adapt it for your specific needs.
 
 
-cyberdesserts.com/npm-scanner
+[https://cyberdesserts.com/npm-scanner](https://cyberdesserts.com/npm-scanner)
